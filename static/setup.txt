@@ -1,0 +1,23 @@
+plugin.tx_smilie {
+	smiliePath = EXT:smilie/res
+	fileExt = gif
+	smilies {
+		1 = :-) :)
+		2 = ;-) ;)
+		3 = :-o :o)
+		4 = :-D :D
+		5 = 8-)
+		6 = :-|
+		7 = :-s s( :s
+		8 = :-U
+		9 = 8O 8-O 8o 8-o
+		10 = =-=
+		11 = M-)
+		12 = ()-)
+		13 = V-)
+		14 = [-)
+		15 = X-)
+		16 = :-(
+		17 = WOW)
+	}
+}
