@@ -71,7 +71,7 @@ class tx_smilie {
 	 *
 	 * @return	void
 	 */
-	private function arrayParser() {
+	protected function arrayParser() {
 		$this->smilies = array();
 		foreach ($this->conf['smilies.'] as $k => $v) {
 			$this->smilies[$k] = t3lib_div::trimExplode(' ', $v);
