@@ -42,17 +42,28 @@ require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
  * @subpackage 	smilie
  */
 class tx_smilie {
-	var $prefixId		= 'tx_smilie';				// Same as class name
-	var $scriptRelPath	= 'class.tx_smilie.php';	// Path to this script relative to the extension dir.
-	var $extKey			= 'smilie';					// The extension key.
-	var $smilies = array();							// Smilie-Array
+	protected $prefixId		= 'tx_smilie';				// Same as class name
+	protected $scriptRelPath	= 'class.tx_smilie.php';	// Path to this script relative to the extension dir.
+	protected $extKey			= 'smilie';					// The extension key.
+	public $smilies = array();							// Smilie-Array
 
-/**
-	* Initiates class
-	*
-	* @return	void
-	*/
+	/**
+	 * Initiates class
+	 *
+	 * @return	void
+	 */
 	function __construct() {
+		if(!is_array($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_smilie.'])) {
+			$this->conf = $this->loadTS();
+		} else {
+			$this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_smilie.'];
+		}
+		$this->smiliesPath = str_replace('EXT:smilie/',t3lib_extMgm::siteRelPath($this->extKey),$this->conf['smiliePath']);
+
+		$this->arrayParser();
+	}
+
+	protected function loadTS() {
 		$tsParser = t3lib_div::makeInstance('t3lib_tsparser_ext');
 		$tsParser->tt_track = 0;
 		$tsParser->init();
@@ -61,9 +72,7 @@ class tx_smilie {
 		$tsParser->runThroughTemplates($rootLine);
 		$tsParser->generateConfig();
 
-		$this->conf = $tsParser->setup['plugin.']['tx_smilie.'];
-
-		$this->arrayParser();
+		return $tsParser->setup['plugin.']['tx_smilie.'];
 	}
 
 	/**
@@ -85,14 +94,14 @@ class tx_smilie {
 	 * @return	string		HTML
 	 */
 	public function replaceSmilies($content) {
-		$smiliesPath = str_replace('EXT:smilie/',t3lib_extMgm::siteRelPath($this->extKey),$this->conf['smiliePath']);
 
 		foreach ($this->smilies as $path => $smilieArray) {
 			foreach ($smilieArray as $smilie) {
-				$image = '<img alt="'.$smilie.'" title="'.$smilie.'" src="'.$smiliesPath.'/'.$path.'.'.$this->conf['fileExt'].'" />';
+				$image = '<img alt="'.$smilie.'" title="'.$smilie.'" src="'.$this->smiliesPath.'/'.$path.'.'.$this->conf['fileExt'].'" />';
 				$content = str_ireplace($smilie, $image, $content);
 			}
 		}
+
 		return $content;
 	}
 }
