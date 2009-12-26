@@ -29,11 +29,6 @@
  * @author Peter Schuster <typo3@peschuster.de>
  */
 
-require_once(PATH_t3lib.'class.t3lib_page.php');
-require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
-require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
-
-
 /**
  * Replaces all specific strings in a string with smilie images
  *
@@ -42,18 +37,19 @@ require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
  * @subpackage 	smilie
  */
 class tx_smilie {
-	protected $prefixId		= 'tx_smilie';				// Same as class name
+	protected $prefixId		= 'tx_smilie';					// Same as class name
 	protected $scriptRelPath	= 'class.tx_smilie.php';	// Path to this script relative to the extension dir.
 	protected $extKey			= 'smilie';					// The extension key.
-	public $smilies = array();							// Smilie-Array
+	public $smilies = array();								// Smilie-Array
 
 	/**
 	 * Initiates class
 	 *
 	 * @return	void
 	 */
-	function __construct() {
+	public function __construct() {
 		if(!is_array($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_smilie.'])) {
+			if ($GLOBALS['TSFE']->id < 1) $GLOBALS['TSFE']->id = 1;
 			$this->conf = $this->loadTS();
 		} else {
 			$this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_smilie.'];
@@ -63,12 +59,17 @@ class tx_smilie {
 		$this->arrayParser();
 	}
 
+	/**
+	 * Fetches typoscript configuration for tx_smilie
+	 *
+	 * @return	array	typoscript configuration
+	 */
 	protected function loadTS() {
 		$tsParser = t3lib_div::makeInstance('t3lib_tsparser_ext');
 		$tsParser->tt_track = 0;
 		$tsParser->init();
 		$sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
-		$rootLine = $sys_page->getRootLine(1);
+		$rootLine = $sys_page->getRootLine($GLOBALS['TSFE']->id);
 		$tsParser->runThroughTemplates($rootLine);
 		$tsParser->generateConfig();
 
@@ -76,14 +77,16 @@ class tx_smilie {
 	}
 
 	/**
-	 * Parses TypoScript-Config-Array and creates and valid smilie array
+	 * Parses TypoScript-Config-Array and creates an valid smilie array
 	 *
 	 * @return	void
 	 */
 	protected function arrayParser() {
 		$this->smilies = array();
-		foreach ($this->conf['smilies.'] as $k => $v) {
-			$this->smilies[$k] = t3lib_div::trimExplode(' ', $v);
+		if (is_array($this->conf['smilies.'])) {
+			foreach ($this->conf['smilies.'] as $k => $v) {
+				$this->smilies[$k] = t3lib_div::trimExplode(' ', $v);
+			}
 		}
 	}
 
@@ -94,7 +97,6 @@ class tx_smilie {
 	 * @return	string		HTML
 	 */
 	public function replaceSmilies($content) {
-
 		foreach ($this->smilies as $path => $smilieArray) {
 			foreach ($smilieArray as $smilie) {
 				$image = '<img alt="'.$smilie.'" title="'.$smilie.'" src="'.$this->smiliesPath.'/'.$path.'.'.$this->conf['fileExt'].'" />';

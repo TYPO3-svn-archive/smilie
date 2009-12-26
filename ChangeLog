@@ -1,3 +1,9 @@
+2009-12-27 Peter Schuster  <typo3@peschuster.de>
+
+	* makes use of typo3 autoloader
+	* small bug fix for missing typoscript configuration
+	* raised version requirements for php to 5.2.0 and for typo3 to v4.3.0
+
 2009-03-17 Peter Schuster  <typo3@peschuster.de>
 
 	* small refactoring changes
