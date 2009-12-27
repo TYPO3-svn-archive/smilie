@@ -4,6 +4,11 @@
 	* small bug fix for missing typoscript configuration
 	* raised version requirements for php to 5.2.0 and for typo3 to v4.3.0
 
+	* small refactoring changes
+	* added autoloader configuration file for typo3 v4.3.0
+	* set state to 'stable'
+	* released version 1.0.0
+
 2009-03-17 Peter Schuster  <typo3@peschuster.de>
 
 	* small refactoring changes

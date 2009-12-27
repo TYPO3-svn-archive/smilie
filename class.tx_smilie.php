@@ -37,26 +37,37 @@
  * @subpackage 	smilie
  */
 class tx_smilie {
-	protected $prefixId		= 'tx_smilie';					// Same as class name
-	protected $scriptRelPath	= 'class.tx_smilie.php';	// Path to this script relative to the extension dir.
-	protected $extKey			= 'smilie';					// The extension key.
-	public $smilies = array();								// Smilie-Array
 
 	/**
-	 * Initiates class
+	 * Smilie array
+	 *
+	 * @var array
+	 */
+	public $smilies = array();
+
+	/**
+	 * Path to smilie folder
+	 *
+	 * @var string
+	 */
+	protected $smiliesPath;
+
+	/**
+	 * Initiates class, loads and parses typoscript
 	 *
 	 * @return	void
 	 */
 	public function __construct() {
+
 		if(!is_array($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_smilie.'])) {
 			if ($GLOBALS['TSFE']->id < 1) $GLOBALS['TSFE']->id = 1;
 			$this->conf = $this->loadTS();
+
 		} else {
 			$this->conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_smilie.'];
 		}
-		$this->smiliesPath = str_replace('EXT:smilie/',t3lib_extMgm::siteRelPath($this->extKey),$this->conf['smiliePath']);
-
-		$this->arrayParser();
+		$this->smiliesPath = str_replace('EXT:smilie/',t3lib_extMgm::siteRelPath('smilie'),$this->conf['smiliePath']);
+		$this->smilies = $this->parseSmilieArray($this->conf['smilies.']);
 	}
 
 	/**
@@ -79,15 +90,17 @@ class tx_smilie {
 	/**
 	 * Parses TypoScript-Config-Array and creates an valid smilie array
 	 *
-	 * @return	void
+	 * @param	array	$data: smilie typoscript configuration array
+	 * @return	array	parsed smilie array
 	 */
-	protected function arrayParser() {
-		$this->smilies = array();
-		if (is_array($this->conf['smilies.'])) {
-			foreach ($this->conf['smilies.'] as $k => $v) {
-				$this->smilies[$k] = t3lib_div::trimExplode(' ', $v);
-			}
-		}
+	protected function parseSmilieArray($data) {
+		$smilies = array();
+
+		if (is_array($data))
+			foreach ($data as $k => $v)
+				$smilies[$k] = t3lib_div::trimExplode(' ', $v);
+
+		return $smilies;
 	}
 
 	/**
@@ -99,7 +112,9 @@ class tx_smilie {
 	public function replaceSmilies($content) {
 		foreach ($this->smilies as $path => $smilieArray) {
 			foreach ($smilieArray as $smilie) {
-				$image = '<img alt="'.$smilie.'" title="'.$smilie.'" src="'.$this->smiliesPath.'/'.$path.'.'.$this->conf['fileExt'].'" />';
+				$image = '<img alt="' . $smilie . '" title="' . $smilie
+					. '" src="' . $this->smiliesPath . '/' . $path . '.' . $this->conf['fileExt'] . '" />';
+
 				$content = str_ireplace($smilie, $image, $content);
 			}
 		}
