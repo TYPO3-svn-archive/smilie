@@ -2,7 +2,7 @@
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2008-2009 Peter Schuster <typo3@peschuster.de>
+ *  (c) 2008-2010 Peter Schuster <typo3@peschuster.de>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is

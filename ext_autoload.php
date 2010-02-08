@@ -4,6 +4,6 @@
  *
  */
 return array(
-	'tx_smilie'		=> t3lib_extMgm::extPath('smilie', 'class.smilie.php'),
+	'tx_smilie'		=> t3lib_extMgm::extPath('smilie', 'class.tx_smilie.php'),
 );
 ?>

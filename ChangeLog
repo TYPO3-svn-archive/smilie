@@ -1,3 +1,10 @@
+2010-02-08 Peter Schuster  <typo3@peschuster.de>
+
+	* fixes wrong file name in autoloader
+	* updated dates in copyright headers
+	* released version 1.0.1
+
+
 2009-12-27 Peter Schuster  <typo3@peschuster.de>
 
 	* makes use of typo3 autoloader
